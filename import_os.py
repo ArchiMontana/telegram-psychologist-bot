@@ -5,7 +5,7 @@ import requests
 from dotenv import load_dotenv
 from telebot import types
 
-# Загрузка токенов из .env
+# Загрузка токена из .env
 load_dotenv()
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
 HUGGINGFACE_API_KEY = os.getenv("HUGGINGFACE_API_KEY")
@@ -44,18 +44,12 @@ def handle_all(message):
 
     if message.text.lower() in ["/start", "привет", "здравствуй", "hello"]:
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=False)
-        btn1 = types.KeyboardButton("💬 Задать вопрос")
-        btn2 = types.KeyboardButton("📌 О боте")
-        btn3 = types.KeyboardButton("❌ Закрыть меню")
-        markup.add(btn1, btn2)
-        markup.add(btn3)
-
-        welcome = "👋 Привет! Я здесь, чтобы поддержать тебя. Чем могу помочь?"
-        bot.send_message(message.chat.id, welcome, reply_markup=markup)
-    elif message.text.lower() in ["❌ закрыть меню"]:
-        hide_markup = types.ReplyKeyboardRemove()
-        bot.send_message(message.chat.id, "Меню скрыто. Просто напиши мне, когда захочешь пообщаться!", reply_markup=hide_markup)
-    elif message.text.lower() in ["📌 о боте"]:
+        markup.add(types.KeyboardButton("💬 Задать вопрос"), types.KeyboardButton("📌 О боте"))
+        markup.add(types.KeyboardButton("❌ Закрыть меню"))
+        bot.send_message(message.chat.id, "👋 Привет! Я здесь, чтобы поддержать тебя. Чем могу помочь?", reply_markup=markup)
+    elif message.text.lower() == "❌ закрыть меню":
+        bot.send_message(message.chat.id, "Меню скрыто. Просто напиши мне, когда захочешь пообщаться!", reply_markup=types.ReplyKeyboardRemove())
+    elif message.text.lower() == "📌 о боте":
         bot.send_message(message.chat.id, "🤖 Я — бесплатный бот для поддержки и общения. Напиши что-нибудь, и я постараюсь помочь!")
     else:
         reply = get_bot_reply(message.text)
