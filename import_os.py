@@ -34,10 +34,8 @@ def get_bot_reply(prompt):
         result = response.json()
         return result[0]["generated_text"] if isinstance(result, list) and "generated_text" in result[0] else "Нет ответа от модели."
     except Exception as e:
-    print("❌ Ошибка от HuggingFace:", e)
-    if response is not None:
-        print("🔍 Ответ HuggingFace:", response.text)
-    return "Произошла ошибка при получении ответа. Попробуй позже."
+        print("Ошибка от HuggingFace:", e)
+        return "Произошла ошибка при получении ответа. Попробуй позже."
 
 @bot.message_handler(func=lambda message: True)
 def handle_all(message):
