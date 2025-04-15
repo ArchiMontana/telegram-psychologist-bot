@@ -26,26 +26,21 @@ def get_bot_reply(prompt):
     }
     payload = {
         "inputs": prompt,
-        "parameters": {"max_new_tokens": 128}
+        "parameters": {"max_new_tokens": 256}
     }
-
     try:
         response = requests.post(url, headers=headers, json=payload)
         response.raise_for_status()
         result = response.json()
-
-        # flan-t5-large возвращает список строк
         if isinstance(result, list) and len(result) > 0:
             return result[0].strip()
         else:
             return "⚠️ Модель не вернула результат."
     except Exception as e:
-        error_text = f"❌ Ошибка от HuggingFace: {e}"
+        print("❌ Ошибка от HuggingFace:", e)
         if 'response' in locals():
-            error_text += f"\n🔍 Ответ: {response.text}"
-        print(error_text)
-        return "⚠️ Ошибка получения ответа от модели."
-
+            print("🔍 Ответ HuggingFace:", response.text)
+        return "Произошла ошибка при получении ответа. Попробуй позже."
 
 @bot.message_handler(func=lambda message: True)
 def handle_all(message):
